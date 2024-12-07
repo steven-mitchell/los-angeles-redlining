@@ -4,7 +4,7 @@
 
 
 <picture>
-<img src="https://s3.amazonaws.com/holc/tiles/CA/LosAngeles1/1939/holc-scan.jpg" alt="https://s3.amazonaws.com/holc/tiles/CA/LosAngeles1/1939/holc-scan.jpg" width="756" height="446" class="shrinkToFit">
+<img src="https://imgur.com/a/MGGFBHt" alt="" width="756" height="446" class="shrinkToFit">
 </picture>
 
 ### Skills and Techniques Demonstrated
