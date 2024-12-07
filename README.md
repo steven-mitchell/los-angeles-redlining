@@ -39,9 +39,12 @@ This repository demonstrates my analysis of historical redlining in Los Angeles 
     └── holcscan.png
 ```
 ### Data
-The data used in this analysis is too large to be hosted on GitHub. Instead, download the data as a zipped file at the link below, unzip, and move into the R project manually.
-https://drive.google.com/file/d/14CauXFZkVh_6z2Euq0m1Sq1kHQ31fiMk/view?usp=sharing
+The data used in this analysis is too large to be hosted on GitHub. Instead, download the data  <a href="https://drive.google.com/file/d/14CauXFZkVh_6z2Euq0m1Sq1kHQ31fiMk/view?usp=sharing"> here </a> as a zipped folder, unzip, and move into the R project manually.
 
+
+
+### Acknowledgements
+This analysis and workflow was originally created by Dr. Ruth Oliver of the Bren School of Environmental Science & Management for the Masters of Environmental Data Science course, Geospatial Analysis and Remote Sensing. My initial work through of this analysis was conducted as part of a homework assignment for this class, and I later polished up this repository.
 
 ### Citations
 | Data | Citation | Link |
