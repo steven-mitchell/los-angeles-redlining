@@ -4,7 +4,7 @@
 
 
 <picture>
-<img src="https://imgur.com/a/MGGFBHt" alt="" width="756" height="446" class="shrinkToFit">
+<img src="https://imgur.com/a/MGGFBHt" alt="Scan of a paper redlining map from 1939." width="756" height="446" class="shrinkToFit">
 </picture>
 
 ### Skills and Techniques Demonstrated
