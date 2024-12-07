@@ -37,4 +37,13 @@ This repository demonstrates my analysis of historical redlining in Los Angeles 
     └── holcscan.png
 ```
 ### Data
+The data used in this analysis is too large to be hosted on GitHub. Instead, download the data as a zipped file at the link below, unzip, and move into the R project manually.
 https://drive.google.com/file/d/14CauXFZkVh_6z2Euq0m1Sq1kHQ31fiMk/view?usp=sharing
+
+
+### Citations
+| Data | Citation | Link |
+| -----| ----- | ------|
+|EJ Screen |  U.S. Environmental Protection Agency (EPA), 2023. EJScreen Technical Documentation. |https://www.epa.gov/ejscreen |
+| Mapping Inequality |Nelson, Robert K., LaDale Winling, et al. "Mapping Inequality: Redlining in New Deal America." Edited by Robert K. Nelson and Edward L. Ayers. American Panorama: An Atlas of United States History, 2023. https://dsl.richmond.edu/panorama/redlining.  | https://www.epa.gov/ejscreen|
+| GBIF Bird Observations | GBIF.org (year), GBIF Home Page. Available from: https://www.gbif.org [13 January 2020]. | https://www.gbif.org/|
