@@ -1,5 +1,5 @@
 # Los Angeles Redlining
-##Exploring patterns of environmental justice
+## Exploring patterns of environmental justice
 
 ### Skills and Techniques Demonstrated
 - Build effective, responsible, accessible and aesthetically-pleasing maps
