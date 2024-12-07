@@ -1,6 +1,8 @@
 # Los Angeles Redlining
 **Exploring patterns of environmental justice**
-![](outputs\holc-scan.jpg)
+<picture>
+  <img align="right" alt="A scan of a paper map of Los Angeles HOLC ratings" src="https://s3.amazonaws.com/holc/tiles/CA/LosAngeles1/1939/holc-scan.jpg" width = "300" style="max-width: 100%;" >
+</picture>
 
 ### Skills and Techniques Demonstrated
 - Build effective, responsible, accessible and aesthetically-pleasing maps
