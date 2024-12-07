@@ -1,6 +1,8 @@
 # Los Angeles Redlining
 **Exploring patterns of environmental justice**
 
+![](images\holc-scan.jpg)
+
 ### Purpose
 This repository demonstrates my analysis of historical redlining in Los Angeles and its modern day impacts to community health and biodiversity metrics.
 
