@@ -1,0 +1,215 @@
+---
+title: "Los Angeles Redlining"
+subtitle: "Exploring patterns of environmental justice"
+author: "Steven Mitchell"
+date: last-modified
+execute: 
+  eval: false
+  echo: true
+  warning: false
+  message: false
+format:
+  html:
+    toc: true
+    code-fold: true
+    theme: sandstone
+editor_options: 
+  chunk_output_type: console
+---
+![](images\holc-scan.jpg)
+
+```{r}
+# load packages
+library(sf)
+library(tidyverse)
+library(tmap)
+library(here)
+library(viridisLite)
+```
+
+## Part 1: Legacy of redlining in current environmental (in)justice
+```{r}
+# Load & Filter EJScreen Data
+ej_la <- read_sf(here("data", "ejscreen", "EJSCREEN_2023_BG_StatePct_with_AS_CNMI_GU_VI.gdb")) %>% 
+  dplyr::filter(ST_ABBREV == "CA") %>% # filter to CA
+  dplyr::filter(CNTY_NAME == "Los Angeles County") %>% # filter to LA County
+  st_make_valid() # make valid for mapping
+
+# Load & wrangle Redlining Data
+rl_data <- st_read(here("data", "mapping-inequality", "mapping-inequality-los-angeles.json")) %>% 
+  st_make_valid() # make valid for mapping
+
+# reproject redlining data to match EJScreen CRS
+rl_transformed <- st_transform(rl_data, crs = st_crs(ej_la)) 
+
+# dissolve to LA County and calculate average values
+la_county <- aggregate(ej_la, by = list(ej_la$CNTY_NAME), FUN = mean)
+
+# CRS consistency check
+if(st_crs(ej_la) == st_crs(rl_transformed)) {
+  print("coordinate reference systems match")
+} else{
+  error("coordinate reference systems do not match")
+}
+```
+
+### Map of Historical Redlining in Los Angeles County
+
+Home Owners’ Loan Corporation (HOLC) rating  ranking system, (A (green), B (blue), C (yellow), D (red)) was used to block access to loans for home ownership. This practice was known as "Redlining"
+
+```{r}
+tmap_mode("view")
+
+map_la <- tm_basemap("Esri")+
+#  tm_shape(ej_la)+
+#  tm_polygons(col = "LOWINCOME",
+#              palette = mako(3000, direction = -1),
+#              title = "Percent Low Income")+
+  tm_shape(rl_data)+
+  tm_polygons(col = "grade",
+              palette = c("green", "blue", "yellow", "darkred"),
+              alpha = 0.5,
+              title = "HOLC Code")+
+  tm_shape(la_county)+
+  tm_borders(lwd = 4) +
+  tm_layout(main.title = "Historical Redlining in Los Angeles County",
+            legend.frame = TRUE)+
+  tm_scale_bar(position = c("left", "bottom"))
+
+tmap_save(map_la, "map_la.html")
+```
+
+![Redlining in Los Angeles County](outputs\map_la.html){height=600 width=800}
+
+
+### Map Interpretation
+Redlined neighborhoods constitute 15.3% of the total population in and 15% of census blocks in Los Angeles County. Many Redlined neighborhoods are in high density urban centers such as East LA and/or adjacent to industrial zones such as the port of Long Beach.
+
+| HOLC Rating | Census Blocks | % of Census Blocks |
+|---------|:-----|-----|
+| A | 449 | 5% |
+| B | 1239 | 13.8% |
+| C | 3058 | 34% |
+| D | 1346 |15% |
+| NA | 2896| 32.2% |
+
+```{r}
+# join the redlining categories onto the EJ Screen data
+ej_rl_leftjoin <- st_join(ej_la, rl_transformed)
+
+# make a table of census blocks vs RL neighborhoods
+table_blocks <- ej_rl_leftjoin %>%
+  group_by(grade) %>%
+  summarise(n_blocks = n()) %>% # count census blocks within each redlining category
+  st_drop_geometry() %>% # remove the geometries so the math works
+  mutate(percent_blocks = n_blocks/sum(n_blocks) * 100) # calculate percentages by RL category
+
+# make a table of population totals
+table_pop <- ej_rl_leftjoin %>% 
+  group_by(grade) %>% 
+  summarise(pop = sum(ACSTOTPOP)) %>% # calculate sum population by HOLC rating
+  st_drop_geometry()%>% # remove the geometries so the math works
+  mutate(percent_pop = pop/sum(pop) * 100) # calculate percentages by RL category
+
+# make a table of percentile low income
+table_lowinc <- ej_rl_leftjoin %>% 
+  group_by(grade) %>% 
+  summarise(income = mean(LOWINCPCT)) %>% # calculate average percentage of low income
+  st_drop_geometry()
+
+# make a table of percentile PM2.5
+table_pm25 <- ej_rl_leftjoin %>% 
+  group_by(grade) %>% 
+  summarise(pm = mean(P_PM25)) %>% # calculate average 2.5 particulate matter
+  st_drop_geometry()
+
+# make a table of percentile low life expectancy
+table_life_exp <- ej_rl_leftjoin %>% 
+  drop_na(P_LIFEEXPPCT) %>% 
+  group_by(grade) %>% 
+  summarise(life_exp = mean(P_LIFEEXPPCT)) %>% # calculate average low life expectancy
+  st_drop_geometry()
+```
+
+```{r}
+# make figures
+
+chart_low_inc <- ggplot(table_lowinc)+
+  geom_col(aes(x=grade, y = income))+
+  labs(x="HOLC Rating", y="Percent Low Income")+
+  theme_bw()
+
+ggsave("chart_low_inc.png", chart_low_inc)
+
+chart_pm25 <- ggplot(table_pm25)+
+  geom_col(aes(x=grade, y = pm))+
+  labs(x="HOLC Rating", y="Percentile for Particulate Matter 2.5 Exposure")+
+  theme_bw()
+
+ggsave("chart_pm25.png", chart_pm25)
+
+chart_life_exp <- ggplot(table_life_exp)+
+  geom_col(aes(x = grade, y = life_exp))+
+  labs(x = "HOLC Rating", y = "Percentile for Low Life Expectancy")+
+  theme_bw()
+
+ggsave("chart_life_exp.png", chart_life_exp)
+```
+::: {layout-ncol=3}
+![Percent Low Income by HOLC rating.](outputs\chart_low_inc.png)
+
+![Percentile of Particulate Matter 2.5 by HOLC rating.](outputs\chart_pm25.png)
+
+![Percentile of low life expectancy by HOLC rating.](outputs\chart_life_exp.png)
+:::
+
+### Results Interpretation
+Redlined neighborhoods (HOLC D) are the highest in percent low income, percentile of particulate matter exposure, and percentile for low life expectancy. Together, these points indicate that the most vulnerable people (low income) experience the most air quality risk (PM 2.5 exposure) and the lowest life expectancy compared to other parts of Los Angeles County. The impacts of Redlining are lethal.
+
+## Part 2: Legacy of redlining in biodiversity observations
+
+```{r} 
+#load, wrangle, and inspect data
+birds <- read_sf(here("data", "gbif-birds-LA")) %>% 
+  filter(year == 2022) 
+
+# reproject CRS
+birds_transformed <- st_transform(birds, crs = st_crs(ej_la))
+
+# CRS consistency check
+if(st_crs(rl_transformed) == st_crs(birds_transformed)) {
+  print("coordinate reference systems match")
+} else{
+  error("coordinate reference systems do not match")
+}
+
+# join the data
+birds_rl_leftjoin <- st_join(rl_transformed, birds_transformed)
+
+# summarize in a table
+table_birds <- birds_rl_leftjoin %>%
+  group_by(grade) %>%
+  summarise(bird_obs = n()) %>% # count census blocks within each redlining category
+  st_drop_geometry() %>% # remove the geometries so the math works
+  mutate(percent_obs= bird_obs/sum(bird_obs) * 100) # calculate percentages by RL category
+
+# chart the data
+chart_birds <- ggplot(table_birds)+
+  geom_col(aes(x=grade, y = percent_obs))+
+  labs(x = "HOLC rating", y = "Percentage of Bird Observations")+
+  theme_bw()
+
+ggsave("chart_birds.png", chart_birds)
+```
+![Bird observations across HOLC ratings.](outputs\chart_birds.png){height=400 width=400}
+
+### Results Interpretation
+
+These results do not match the findings from Ellis-Soto et al. 2023. Whereas that study found that historically redlined neighborhoods were drastically under-surveyed in citizen science, these results show the second highest number of bird observations in those same redlined neighborhoods. This is surprising because of the human health impacts illustrated in Part 1. There could be a number of possible explanations for the discrepancy, one of which could be disparate vulnerabilities to air pollution between humans and birds. 
+
+### Citations
+| Data | Citation | Link |
+| -----| ----- | ------|
+|EJ Screen |  U.S. Environmental Protection Agency (EPA), 2023. EJScreen Technical Documentation. |https://www.epa.gov/ejscreen |
+| Mapping Inequality |Nelson, Robert K., LaDale Winling, et al. "Mapping Inequality: Redlining in New Deal America." Edited by Robert K. Nelson and Edward L. Ayers. American Panorama: An Atlas of United States History, 2023. https://dsl.richmond.edu/panorama/redlining.  | https://www.epa.gov/ejscreen|
+| GBIF Bird Observations | GBIF.org (year), GBIF Home Page. Available from: https://www.gbif.org [13 January 2020]. | https://www.gbif.org/|
