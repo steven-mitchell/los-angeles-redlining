@@ -1,10 +1,10 @@
 # Los Angeles Redlining
 **Exploring patterns of environmental justice**
 
-<img src="https://s3.amazonaws.com/holc/tiles/CA/LosAngeles1/1939/holc-scan.jpg" alt="https://s3.amazonaws.com/holc/tiles/CA/LosAngeles1/1939/holc-scan.jpg" width="756" height="446" class="shrinkToFit">
+
 
 <picture>
-  <img align="left" alt="A scan of a paper map of Los Angeles HOLC ratings" src="https://s3.amazonaws.com/holc/tiles/CA/LosAngeles1/1939/holc-scan.jpg" width = "300" style="max-width: 100%;" >
+<img src="https://s3.amazonaws.com/holc/tiles/CA/LosAngeles1/1939/holc-scan.jpg" alt="https://s3.amazonaws.com/holc/tiles/CA/LosAngeles1/1939/holc-scan.jpg" width="756" height="446" class="shrinkToFit">
 </picture>
 
 ### Skills and Techniques Demonstrated
@@ -16,7 +16,3 @@
 This repository demonstrates my analysis of historical redlining in Los Angeles and its modern day impacts to community health and biodiversity metrics.
 
 ###
-<picture>
-
-<img src="https://s3.amazonaws.com/holc/tiles/CA/LosAngeles1/1939/holc-scan.jpg" alt="https://s3.amazonaws.com/holc/tiles/CA/LosAngeles1/1939/holc-scan.jpg" width="756" height="446" class="shrinkToFit">
-</picture>
