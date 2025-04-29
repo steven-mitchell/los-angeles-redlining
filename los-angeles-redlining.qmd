@@ -13,7 +13,7 @@ format:
     toc: true
     code-fold: true
     theme: sandstone
-    embed-rsources: true
+    embed-resources: true
 editor_options: 
   chunk_output_type: console
 ---
